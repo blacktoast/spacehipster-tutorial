@@ -52,7 +52,7 @@ SpaceHipster.Game.prototype = {
       this.game.physics.arcade.moveToPointer(this.player, this.playerSpeed);
     }
 
-    //collision between player and asteroids
+    //collision between player and asteroids 출돌했을때 hitAsteroid를 호출한다
     this.game.physics.arcade.collide(this.player, this.asteroids, this.hitAsteroid, null, this);
 
     //overlapping between player and collectables
@@ -70,7 +70,7 @@ SpaceHipster.Game.prototype = {
     var collectable;
 
     for (var i = 0; i < numCollectables; i++) {
-      //add sprite
+      //sprite 를추가한다.
       collectable = this.collectables.create(this.game.world.randomX, this.game.world.randomY, 'power');
       collectable.animations.add('fly', [0, 1, 2, 3], 5, true);
       collectable.animations.play('fly');
@@ -100,10 +100,12 @@ SpaceHipster.Game.prototype = {
       asteriod.body.immovable = true;
       //맵밖으로 나가지 않게한다
       asteriod.body.collideWorldBounds = true;
+      //맵끝에 부딫혔을때 다시 반대편으로 나가게한다
+      asteriod.body.bounce.setTo(0.8,0.8);
     }
   },
   hitAsteroid: function(player, asteroid) {
-    //play explosion sound
+    //부딫혔을때 터지는 소리
     this.explosionSound.play();
 
     //make the player explode
@@ -129,7 +131,7 @@ SpaceHipster.Game.prototype = {
     //소리지정
     this.collectSound.play();
 
-    //먹었을때
+    //먹었을때 점수를 올리고, 점수판을 업데이트한다.
     this.playerScore++;
     this.scoreLabel.text = this.playerScore;
 
@@ -137,10 +139,11 @@ SpaceHipster.Game.prototype = {
     collectable.destroy();
   },
   showLabels: function() {
-    //score text
+    //점수판
     var text = "0";
     var style = { font: "20px Arial", fill: "#fff", align: "center" };
     this.scoreLabel = this.game.add.text(this.game.width-50, this.game.height - 50, text, style);
+    //카메라가 움직일떄 따라간다.
     this.scoreLabel.fixedToCamera = true;
   }
 };
